@@ -1,0 +1,117 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-en="Join Us - ENRO Team" data-tr="Bize Katıl - ENRO Team">Bize Katıl - ENRO Team</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="script.js" defer></script>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-brand">
+            <img src="logo.png" alt="ENRO Team Logo" class="logo">
+        </div>
+        <div class="nav-toggle">☰</div>
+        <div class="nav-links">
+            <a href="index.html#home" data-en="Home" data-tr="Ana Sayfa">Ana Sayfa</a>
+            <a href="index.html#about" data-en="About Us" data-tr="Hakkımızda">Hakkımızda</a>
+            <a href="index.html#projects" data-en="Our Projects" data-tr="Projelerimiz">Projelerimiz</a>
+            <a href="index.html#team" data-en="Our Team" data-tr="Ekibimiz">Ekibimiz</a>
+            <a href="index.html#sponsors" data-en="Sponsors" data-tr="Sponsorlar">Sponsorlar</a>
+            <a href="gallery.html" data-en="Gallery" data-tr="Galeri">Galeri</a>
+            <a href="index.html#contact" data-en="Contact" data-tr="İletişim">İletişim</a>
+            <div class="lang-toggle">
+                <span class="lang-option active" data-lang="tr">Tr</span> | 
+                <span class="lang-option" data-lang="en">En</span>
+            </div>
+            <a href="apply.html" class="nav-apply" data-en="Join Us" data-tr="Bize Katıl">Bize Katıl</a>
+        </div>
+    </nav>
+
+    <section class="apply-section container">
+        <h2 data-en="Join Us" data-tr="Bize Katıl">Bize Katıl</h2>
+        <p data-en="Join ENRO Team and take part in innovative projects! Choose one of the fields below and fill out the application form." data-tr="ENRO Team'e katılarak yenilikçi projelerde yer al! Aşağıdaki alanlardan birini seç ve başvuru formunu doldur.">ENRO Team'e katılarak yenilikçi projelerde yer al! Aşağıdaki alanlardan birini seç ve başvuru formunu doldur.</p>
+        <div class="project-grid">
+            <div class="project-card">
+                <img src="yazılım.webp" alt="Yazılım ve Elektronik" data-en="Software and Electronics" data-tr="Yazılım ve Elektronik">
+                <h3 data-en="Software and Electronics Team" data-tr="Yazılım ve Elektronik Ekip">Yazılım ve Elektronik Ekip</h3>
+                <p data-en="Would you like to work on AI, embedded systems, and software development projects?" data-tr="Yapay zeka, gömülü sistemler ve yazılım geliştirme projelerinde çalışmak ister misiniz?">Yapay zeka, gömülü sistemler ve yazılım geliştirme projelerinde çalışmak ister misiniz?</p>
+                <a href="https://docs.google.com/forms/d/e/1FAIpQLScVDuFRDUHkOU65SiT_LZrpKIZI6L7lkv9S6z8Fica_o5Q7LA/viewform" class="project-link" target="_blank" data-en="Apply" data-tr="Başvur">Başvur</a>
+            </div>
+            <div class="project-card">
+                <img src="mekanik-proje.jpg" alt="Mekanik" data-en="Mechanical" data-tr="Mekanik">
+                <h3 data-en="Mechanical Team" data-tr="Mekanik Ekip">Mekanik Ekip</h3>
+                <p data-en="Are you interested in the design and production of robotic systems?" data-tr="Robotik sistemlerin tasarımı ve üretimiyle ilgileniyor musunuz?">Robotik sistemlerin tasarımı ve üretimiyle ilgileniyor musunuz?</p>
+                <a href="https://docs.google.com/forms/d/e/1FAIpQLSfhzYdYGPhp5ZeBprx2kUMYeIgJ91fPR0UvT-0hF970qzxyvw/viewform?usp=header" class="project-link" target="_blank" data-en="Apply" data-tr="Başvur">Başvur</a>
+            </div>
+            <div class="project-card">
+                <img src="2000_2000_1-copy.png" alt="Kurumsal" data-en="Corporate" data-tr="Kurumsal">
+                <h3 data-en="Corporate Team" data-tr="Kurumsal Ekip">Kurumsal Ekip</h3>
+                <p data-en="Support our team in sponsorship, communication, and organization!" data-tr="Sponsorluk, iletişim ve organizasyon alanlarında ekibimize destek olun!">Sponsorluk, iletişim ve organizasyon alanlarında ekibimize destek olun!</p>
+                <a href="https://docs.google.com/forms/u/0/d/e/1FAIpQLScuPw3MS9zgN_dEKsZRRT5wWk0L1Kul9yIKI5Kz-SzYqwdrxg/viewform?usp=header&pli=1" class="project-link" target="_blank" data-en="Apply" data-tr="Başvur">Başvur</a>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="footer-content container">
+            <div class="footer-info">
+                <h3 data-en="Contact" data-tr="İletişim">İletişim</h3>
+                <p data-en="ITU Maslak Campus, Electrical-Electronics Building" data-tr="İTÜ Maslak Kampüsü, Elektrik-Elektronik Binası">İTÜ Maslak Kampüsü, Elektrik-Elektronik Binası</p>
+                <p>E-posta: info@enroteam.itu.edu.tr</p>
+            </div>
+            <div class="footer-social">
+                <h3 data-en="Social Media" data-tr="Sosyal Medya">Sosyal Medya</h3>
+                <a href="https://www.linkedin.com/company/106956058/admin/dashboard/" target="_blank"><i class="fab fa-linkedin"></i></a>
+                <a href="https://www.youtube.com/@ITUENRO" target="_blank"><i class="fab fa-youtube"></i></a>
+                <a href="https://www.instagram.com/ituenro?igsh=MWk5M3RmbDlsOGx3bQ==" target="_blank"><i class="fab fa-instagram"></i></a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <span data-en="© 2024 ENRO Team. All rights reserved." data-tr="© 2024 ENRO Team. Tüm hakları saklıdır.">© 2024 ENRO Team. Tüm hakları saklıdır.</span>
+        </div>
+    </footer>
+</body>
+</html>
