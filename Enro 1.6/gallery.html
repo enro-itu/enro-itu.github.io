@@ -1,0 +1,120 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-en="Gallery - ENRO Team" data-tr="Galeri - ENRO Team">Galeri - ENRO Team</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="script.js" defer></script>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-brand">
+            <img src="logo.png" alt="ENRO Team Logo" class="logo">
+        </div>
+        <div class="nav-toggle">☰</div>
+        <div class="nav-links">
+            <a href="index.html#home" data-en="Home" data-tr="Ana Sayfa">Ana Sayfa</a>
+            <a href="index.html#about" data-en="About Us" data-tr="Hakkımızda">Hakkımızda</a>
+            <a href="index.html#projects" data-en="Our Projects" data-tr="Projelerimiz">Projelerimiz</a>
+            <a href="index.html#team" data-en="Our Team" data-tr="Ekibimiz">Ekibimiz</a>
+            <a href="index.html#sponsors" data-en="Sponsors" data-tr="Sponsorlar">Sponsorlar</a>
+            <a href="gallery.html" data-en="Gallery" data-tr="Galeri">Galeri</a>
+            <a href="index.html#contact" data-en="Contact" data-tr="İletişim">İletişim</a>
+            <div class="lang-toggle">
+                <span class="lang-option active" data-lang="tr">Tr</span> | 
+                <span class="lang-option" data-lang="en">En</span>
+            </div>
+            <a href="apply.html" class="nav-apply" data-en="Join Us" data-tr="Bize Katıl">Bize Katıl</a>
+        </div>
+    </nav>
+
+    <section class="gallery-section container">
+        <h2 data-en="Gallery" data-tr="Galeri">Galeri</h2>
+        <p data-en="Discover our team's best moments here!" data-tr="Takımımızın en güzel anlarını burada keşfedin!">Takımımızın anıları</p>
+        <div class="project-grid">
+            <div class="project-card">
+                <img src="1. fotoğraf" alt="Galeri 1" data-en="Gallery 1" data-tr="Galeri 1">
+                <h3 data-en="Teamwork 2024" data-tr="Takım Çalışması 2024">Takım Çalışması 2024</h3>
+                <p data-en="Competition preparations." data-tr="Yarışma hazırlıkları">Yarışma hazırlıkları</p>
+            </div>
+            <div class="project-card">
+                <img src="2. fotoğraf gelecek" alt="Galeri 2" data-en="Gallery 2" data-tr="Galeri 2">
+                <h3 data-en="Competition Preparations" data-tr="Yarışma Hazırlıkları">Yarışma Hazırlıkları</h3>
+                <p data-en="Moments from our project development process." data-tr="Proje geliştirme sürecinden kareler.">Proje geliştirme sürecinden kareler.</p>
+            </div>
+            <div class="project-card">
+                <img src="3. foto gelecek" alt="Galeri 3" data-en="Gallery 3" data-tr="Galeri 3">
+                <h3 data-en="Project Presentation" data-tr="Proje Sunumu">Proje Sunumu</h3>
+                <p data-en="Teknofest 2024 presentation moments." data-tr="Teknofest 2024 sunum anları.">Teknofest 2024 sunum anları.</p>
+            </div>
+            <div class="project-card">
+                <img src="4. foto gelecek" alt="Galeri 4" data-en="Gallery 4" data-tr="Galeri 4">
+                <h3 data-en="Team Meeting" data-tr="Takım Toplantısı">Takım Toplantısı</h3>
+                <p data-en="A moment from our strategy meetings." data-tr="Strateji toplantılarımızdan bir kare.">Strateji toplantılarımızdan bir kare.</p>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="footer-content container">
+            <div class="footer-info">
+                <h3 data-en="Contact" data-tr="İletişim">İletişim</h3>
+                <p data-en="ITU Maslak Campus, Electrical-Electronics Building" data-tr="İTÜ Maslak Kampüsü, Elektrik-Elektronik Binası">İTÜ Maslak Kampüsü, Elektrik-Elektronik Binası</p>
+                <p>E-posta: info@enroteam.itu.edu.tr</p>
+                
+            </div>
+            <div class="footer-social">
+                <h3 data-en="Social Media" data-tr="Sosyal Medya">Sosyal Medya</h3>
+                <a href="https://www.linkedin.com/company/106956058/admin/dashboard/" target="_blank"><i class="fab fa-linkedin"></i></a>
+                <a href="https://www.youtube.com/@ITUENRO" target="_blank"><i class="fab fa-youtube"></i></a>
+                <a href="https://www.instagram.com/ituenro?igsh=MWk5M3RmbDlsOGx3bQ==" target="_blank"><i class="fab fa-instagram"></i></a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <span data-en="© 2024 ENRO Team. All rights reserved." data-tr="© 2024 ENRO Team. Tüm hakları saklıdır.">© 2024 ENRO Team. Tüm hakları saklıdır.</span>
+        </div>
+    </footer>
+</body>
+</html>
