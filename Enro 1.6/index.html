@@ -1,0 +1,273 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-en="ENRO Team" data-tr="ENRO Team">ENRO Team</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="script.js" defer></script>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-brand">
+            <img src="logo.png" alt="ENRO Team Logo" class="logo">
+        </div>
+        <div class="nav-toggle">☰</div>
+        <div class="nav-links">
+            <a href="#home" data-en="Home" data-tr="Ana Sayfa">Ana Sayfa</a>
+            <a href="#about" data-en="About Us" data-tr="Hakkımızda">Hakkımızda</a>
+            <a href="#projects" data-en="Our Projects" data-tr="Projelerimiz">Projelerimiz</a>
+            <a href="#team" data-en="Our Team" data-tr="Ekibimiz">Ekibimiz</a>
+            <a href="#sponsors" data-en="Sponsors" data-tr="Sponsorlar">Sponsorlar</a>
+            <a href="gallery.html" data-en="Gallery" data-tr="Galeri">Galeri</a>
+            <a href="#contact" data-en="Contact" data-tr="İletişim">İletişim</a>
+            <div class="lang-toggle">
+                <span class="lang-option active" data-lang="tr">Tr</span> | 
+                <span class="lang-option" data-lang="en">En</span>
+            </div>
+            <a href="apply.html" class="nav-apply" data-en="Join Us" data-tr="Bize Katıl">Bize Katıl</a>
+        </div>
+    </nav>
+
+    <section id="home" class="hero">
+        <div class="hero-slideshow">
+            <div class="hero-slide active" style="background-image: url('22.jpg');"></div>
+            <div class="hero-slide" style="background-image: url('33.jpg');"></div>
+            <div class="hero-slide" style="background-image: url('11.jpg');"></div>
+            <div class="hero-arrows">
+                <button class="arrow left-arrow"><i class="fas fa-chevron-left"></i></button>
+                <button class="arrow right-arrow"><i class="fas fa-chevron-right"></i></button>
+            </div>
+            <div class="hero-dots">
+                <span class="dot active"></span>
+                <span class="dot"></span>
+                <span class="dot"></span>
+            </div>
+        </div>
+        <div class="hero-content">
+            <h1 data-en="ENRO Team" data-tr="ENRO Team">ENRO Team</h1>
+            <p data-en="Building the Future with Innovative Robotic Solutions!" data-tr="Yenilikçi robotik çözümlerle geleceği inşa ediyoruz!">Yenilikçi robotik çözümlerle geleceği inşa ediyoruz!</p>
+            <a href="apply.html" class="nav-apply" data-en="Join Us" data-tr="Bize Katıl">Bize Katıl</a>
+        </div>
+    </section>
+
+    <section id="about" class="about-section container">
+        <h2 data-en="About Us" data-tr="Hakkımızda">Hakkımızda</h2>
+        <div class="about-content">
+            <div class="about-text">
+                <p data-en="ENRO Team is an innovative robotics team operating under ITU. We develop pioneering projects in technology and engineering." data-tr="ENRO Team, İTÜ bünyesinde faaliyet gösteren yenilikçi bir robotik takımıdır. Teknoloji ve mühendislik alanlarında öncü projeler geliştiriyoruz.">ENRO Team, İTÜ bünyesinde faaliyet gösteren yenilikçi bir robotik takımıdır. Teknoloji ve mühendislik alanlarında öncü projeler geliştiriyoruz.</p>
+                <p data-en="Our goal is to shape the technologies of the future with sustainable and innovative solutions." data-tr="Hedefimiz, sürdürülebilir ve yenilikçi çözümlerle geleceğin teknolojilerini şekillendirmektir.">Hedefimiz, sürdürülebilir ve yenilikçi çözümlerle geleceğin teknolojilerini şekillendirmektir.</p>
+                <ul>
+                    <li data-en="Project 1: Robotic Arm" data-tr="Proje 1: Robotik Kol">Proje 1: Robotik Kol</li>
+                    <li data-en="Project 2: Robot Dog" data-tr="Proje 2: Robot Köpek">Proje 2: Robot Köpek</li>
+                    
+                </ul>
+            </div>
+            <div class="about-stats">
+                <div class="stat-item">
+                    <div class="stat-number">15</div>
+                    <div class="stat-label" data-en="Active Members" data-tr="Aktif Üye">Aktif Üye</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">2</div>
+                    <div class="stat-label" data-en="Projects" data-tr="Proje">Proje</div>
+                </div>
+                
+            </div>
+        </div>
+    </section>
+
+    <section id="projects" class="projects-section container">
+        <h2 data-en="Our Projects" data-tr="Projelerimiz">Projelerimiz</h2>
+        <div class="project-grid">
+            <div class="project-card">
+                <img src="Arduino-Robot-Arm-3D-Model.jpg" alt="Proje 1">
+                <h3 data-en="Robotic Arm" data-tr="Robotik Kol">Robotik Kol</h3>
+                <p data-en="Robotic arm for industrial automation." data-tr="Endüstriyel otomasyon için robotik kol.">Endüstriyel otomasyon için robotik kol.</p>
+                <a href="#" class="project-link" data-modal="modal1" data-en="Details" data-tr="Detaylar">Detaylar</a>
+            </div>
+            <div class="project-card">
+                <img src="unitree-go2-air-robot-kopek-pet-dis-ortam-robotlari-unitree-21960-10-B.jpg" alt="Proje 2">
+                <h3 data-en="Robot Dog" data-tr="Robot Köpek">Robot Köpek</h3>
+                <p data-en="Robot dog." data-tr="Robot köpek.">Robot köpek.</p>
+                <a href="#" class="project-link" data-modal="modal2" data-en="Details" data-tr="Detaylar">Detaylar</a>
+            </div>
+            <!-- 3. PROJE GELDİĞİNDE
+             <div class="project-card">
+                <img src="project3.jpg" alt="Proje 3">
+                <h3 data-en="Energy System" data-tr="Enerji Sistemi">Enerji Sistemi</h3>
+                <p data-en="." data-tr="."></p>
+                <a href="#" class="project-link" data-modal="modal3" data-en="Details" data-tr="Detaylar">Detaylar</a>
+            </div>
+             -->
+        </div>
+        <!-- Modals -->
+        <div id="modal1" class="modal">
+            <div class="modal-content">
+                <h3 data-en="Robotic Arm Details" data-tr="Robotik Kol Detayları">Robotik Kol Detayları</h3>
+                <p data-en="Robotik Kol detaylar ing" data-tr="robotik kol detaylar">robotik kol detaylar</p>
+                <button class="modal-close" data-en="Close" data-tr="Kapat">Kapat</button>
+            </div>
+        </div>
+        <div id="modal2" class="modal">
+            <div class="modal-content">
+                <h3 data-en="Robot Dog Details" data-tr="Robot Köpek Detayları">Robot Köpek Detayları</h3>
+                <p data-en="robot köpek detaylar ing" data-tr="robot köpek detaylar">robot köpek detaylar</p>
+                <button class="modal-close" data-en="Close" data-tr="Kapat">Kapat</button>
+            </div>
+        </div>
+       
+           <!--   3. PROJE
+           <div id="modal3" class="modal">
+            <div class="modal-content">
+                <h3 data-en="Energy System Details" data-tr="Enerji Sistemi Detayları">Enerji Sistemi Detayları</h3>
+                <p data-en="3. proje ing " data-tr="3. proje açıklama">3. proje açıklama</p>
+                <button class="modal-close" data-en="Close" data-tr="Kapat">Kapat</button>
+            </div>
+             -->
+        </div>
+    </section>
+
+    <section id="team" class="team-section container">
+        <h2 data-en="Our Team" data-tr="Ekibimiz">Ekibimiz</h2>
+        <div class="project-grid">
+            <div class="project-card">
+                <h3 data-en="Ali Özkurt" data-tr="Ali Özkurt">Ali Özkurt</h3>
+                <p data-en="Team Leader" data-tr="Takım Kaptanı">Takım Kaptanı</p>
+            </div>
+            <div class="project-card">
+                <h3 data-en="İbrahim Salih Kılıç" data-tr="İbrahim Salih Kılıç">İbrahim Salih Kılıç</h3>
+                <p data-en="Founding Member" data-tr="Kurucu Üye">Kurucu Üye</p>
+            </div>
+            <div class="project-card">
+                <h3 data-en="Yusuf Emre Cıdık" data-tr="Yusuf Emre Cıdık">Yusuf Emre Cıdık</h3>
+                <p data-en="Founding Member" data-tr="Kurucu Üye">Kurucu Üye</p>
+            </div>
+            <div class="project-card">
+                <h3 data-en="Demir Selçuk Sakmak" data-tr="Demir Selçuk Sakmak">Demir Selçuk Sakmak</h3>
+                <p data-en=" Mechanical Design Team Leader" data-tr="Mekanik-Tasarım Ekip Lideri">Mekanik-Tasarım Ekip Lideri</p>
+            </div>
+             <div class="project-card">
+                <h3 data-en="Ahmet Burak Karaaslan" data-tr="Ahmet Burak Karaaslan">Ahmet Burak Karaaslan</h3>
+                <p data-en="Active Member" data-tr="Mekanik-Tasarım Ekibi">Mekanik-Tasarım Ekibi</p>
+            </div>
+            <div class="project-card">
+                <h3 data-en="Muhammet Emin Kırmızı" data-tr="Muhammet Emin Kırmızı">Muhammet Emin Kırmızı</h3>
+                <p data-en="Mechanical Design Team" data-tr="Mekanik-Tasarım Ekibi">Mekanik-Tasarım Ekibi</p>
+            </div>
+            <div class="project-card">
+                <h3 data-en="İbrahim İkbal Bayram" data-tr="İbrahim İkbal Bayram">İbrahim İkbal Bayram</h3>
+                <p data-en="Mechanical Design Team" data-tr="Mekanik-Tasarım Ekibi">Mekanik-Tasarım Ekibi</p>
+            </div>
+             <div class="project-card">
+                <h3 data-en="Emre Can Eker" data-tr="Emre Can Eker">Emre Can Eker</h3>
+                <p data-en="Software-Electronics Team Leader" data-tr="Yazılım-Elektronik Ekip Lideri">Yazılım-Elektronik Ekip Lideri</p>
+            </div>
+            <div class="project-card">
+                <h3 data-en="Hamza Aya" data-tr="Hamza Aya">Hamza Aya</h3>
+                <p data-en="Software-Electronics Team" data-tr="Yazılım-Elektronik Ekibi">Yazılım-Elektronik Ekibi</p>
+            </div>
+            <div class="project-card">
+                <h3 data-en="Efe Çolak" data-tr="Efe Çolak">Efe Çolak</h3>
+                <p data-en="Software-Electronics Team" data-tr="Yazılım-Elektronik Ekibi">Yazılım-Elektronik Ekibi</p>
+            </div>
+            <div class="project-card">
+                <h3 data-en="Emre Bolelli" data-tr="Emre Bolelli">Emre Bolelli</h3>
+                <p data-en="Software-Electronics Team" data-tr="Yazılım-Elektronik Ekibi">Yazılım-Elektronik Ekibi</p>
+            </div>
+            <div class="project-card">
+                <h3 data-en="Kemal Enes Ulu" data-tr="Kemal Enes Ulu">Kemal Enes Ulu</h3>
+                <p data-en="Software-Electronics Team" data-tr="Yazılım-Elektronik Ekibi">Yazılım-Elektronik Ekibi</p>
+            </div>
+            <div class="project-card">
+                <h3 data-en="Furkan Özkan" data-tr="Furkan Özkan">Furkan Özkan</h3>
+                <p data-en="Software-Electronics Team" data-tr="Yazılım-Elektronik Ekibi">Yazılım-Elektronik Ekibi</p>
+            </div>
+            <div class="project-card">
+                <h3 data-en="Koray Doğan" data-tr="Koray Doğan">Koray Doğan</h3>
+                <p data-en="Corporate Team Leader" data-tr="Kurumsal Ekip Lideri">Kurumsal Ekip Lideri</p>
+            </div>
+            <div class="project-card">
+                <h3 data-en="Defne Sarı" data-tr="Defne Sarı">Defne Sarı</h3>
+                <p data-en="Corporate Team" data-tr="Kurumsal Ekip">Kurumsal Ekip</p>
+            </div>
+            <div class="project-card">
+                <h3 data-en="Deniz Yeter" data-tr="Deniz Yeter">Deniz Yeter</h3>
+                <p data-en="Corporate Team" data-tr="Kurumsal Ekip">Kurumsal Ekip</p>
+            </div>
+            <div class="project-card">
+                <h3 data-en="Emir Mert Topyıldız" data-tr="Emir Mert Topyıldız">Emir Mert Topyıldız</h3>
+                <p data-en="Corporate Team" data-tr="Kurumsal Ekip">Kurumsal Ekip</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="sponsors" class="sponsors-section container">
+        <h2 data-en="Our Sponsors" data-tr="Sponsorlarımız">Sponsorlarımız</h2>
+        <div class="sponsor-grid">
+            <img src="sponsor1.png" alt="Sponsor 1">
+            <img src="sponsor2.png" alt="Sponsor 2">
+            <img src="sponsor3.png" alt="Sponsor 3">
+        </div>
+    </section>
+
+    <footer id="contact" class="footer">
+        <div class="footer-content container">
+            <div class="footer-info">
+                <h3 data-en="Contact" data-tr="İletişim">İletişim</h3>
+                <p data-en="ITU Maslak Campus, Electrical-Electronics Building" data-tr="İTÜ Maslak Kampüsü, Elektrik-Elektronik Binası">İTÜ Maslak Kampüsü, Elektrik-Elektronik Binası</p>
+                <p>E-posta: info@enroteam.itu.edu.tr</p>
+                
+            </div>
+            <div class="footer-social">
+                <h3 data-en="Social Media" data-tr="Sosyal Medya">Sosyal Medya</h3>
+                <a href="https://www.linkedin.com/company/106956058/admin/dashboard/" target="_blank"><i class="fab fa-linkedin"></i></a>
+                <a href="https://www.youtube.com/@ITUENRO" target="_blank"><i class="fab fa-youtube"></i></a>
+                <a href="https://www.instagram.com/ituenro?igsh=MWk5M3RmbDlsOGx3bQ==" target="_blank"><i class="fab fa-instagram"></i></a>
+            </div>
+        </div>
+        
+    </footer>
+</body>
+</html>
